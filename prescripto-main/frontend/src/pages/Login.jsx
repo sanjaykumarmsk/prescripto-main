@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
-import axios from 'axios'
+import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-
-  const {backendUrl, token, setToken} = useContext(AppContext)
-  const navigate = useNavigate()
+  const { backendUrl, token, setToken } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const [state, setState] = useState("Sign Up");
 
@@ -16,42 +15,43 @@ const Login = () => {
   const [name, setName] = useState("");
 
   const onSubmitHandler = async (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     try {
-
-      if (state === 'Sign Up') {
-
-        const {data} = await axios.post(backendUrl + '/api/user/register', {name,password,email})
+      if (state === "Sign Up") {
+        const { data } = await axios.post(backendUrl + "/api/user/register", {
+          name,
+          password,
+          email,
+        });
         if (data.success) {
-          localStorage.setItem('token',data.token)
-          setToken(data.token)
+          localStorage.setItem("token", data.token);
+          setToken(data.token);
         } else {
-          toast.error(data.message)
+          toast.error(data.message);
         }
-        
       } else {
-
-        const {data} = await axios.post(backendUrl + '/api/user/login', {password,email})
+        const { data } = await axios.post(backendUrl + "/api/user/login", {
+          password,
+          email,
+        });
         if (data.success) {
-          localStorage.setItem('token',data.token)
-          setToken(data.token)
+          localStorage.setItem("token", data.token);
+          setToken(data.token);
         } else {
-          toast.error(data.message)
+          toast.error(data.message);
         }
-
       }
-      
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
-  }
+  };
 
-  useEffect(()=> {
+  useEffect(() => {
     if (token) {
-      navigate('/')
+      navigate("/");
     }
-  },[token])
+  }, [token]);
 
   return (
     <form onSubmit={onSubmitHandler} className="min-h-[80vh] flex items-center">
@@ -93,7 +93,10 @@ const Login = () => {
             value={password}
           />
         </div>
-        <button type="submit" className="bg-primary text-white w-full py-2 my-2 rounded-md text-base cursor-pointer">
+        <button
+          type="submit"
+          className="bg-primary text-white w-full py-2 my-2 rounded-md text-base cursor-pointer"
+        >
           {state === "Sign Up" ? "Create account" : "Login"}
         </button>
         {state === "Sign Up" ? (
